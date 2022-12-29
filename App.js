@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 const defaultUserDeck = [
   { id: 1, emoji: "😀" },
@@ -8,36 +9,54 @@ const defaultUserDeck = [
   { id: 3, emoji: "😄" },
 ];
 
+// const gameDecks = [
+//   [
+//     { id: 1, emoji: "😘" },
+//     { id: 2, emoji: "😃" },
+//     { id: 3, emoji: "😅" },
+//   ],
+//   [
+//     { id: 2, emoji: "😃" },
+//     { id: 1, emoji: "😘" },
+//     { id: 4, emoji: "😁" },
+//   ],
+//   [
+//     { id: 1, emoji: "😘" },
+//     { id: 4, emoji: "😁" },
+//     { id: 5, emoji: "😆" },
+//   ],
+//   [
+//     { id: 4, emoji: "😁" },
+//     { id: 5, emoji: "😆" },
+//     { id: 1, emoji: "😘" },
+//   ],
+//   [
+//     { id: 4, emoji: "😁" },
+//     { id: 5, emoji: "😆" },
+//     { id: 1, emoji: "😘" },
+//   ],
+// ];
+
 const gameDecks = [
   [
-    { id: 1, emoji: "😘" },
-    { id: 2, emoji: "😃" },
-    { id: 3, emoji: "😅" },
-    { id: 4, emoji: "1" },
+    { id: 1, emoji: "😘", rotation: 45 },
+    { id: 2, emoji: "😃", rotation: 90 },
+    { id: 3, emoji: "😅", rotation: 135 },
   ],
   [
-    { id: 2, emoji: "😃" },
-    { id: 1, emoji: "😘" },
-    { id: 4, emoji: "😁" },
-    { id: 4, emoji: "2" },
+    { id: 2, emoji: "😃", rotation: 180 },
+    { id: 1, emoji: "😘", rotation: 225 },
+    { id: 4, emoji: "😁", rotation: 270 },
   ],
   [
-    { id: 1, emoji: "😘" },
-    { id: 4, emoji: "😁" },
-    { id: 5, emoji: "😆" },
-    { id: 4, emoji: "3" },
+    { id: 1, emoji: "😘", rotation: 315 },
+    { id: 4, emoji: "😁", rotation: 0 },
+    { id: 5, emoji: "😆", rotation: 45 },
   ],
   [
-    { id: 4, emoji: "😁" },
-    { id: 5, emoji: "😆" },
-    { id: 1, emoji: "😘" },
-    { id: 4, emoji: "5" },
-  ],
-  [
-    { id: 4, emoji: "😁" },
-    { id: 5, emoji: "😆" },
-    { id: 1, emoji: "😘" },
-    { id: 4, emoji: "6" },
+    { id: 4, emoji: "😁", rotation: 90 },
+    { id: 5, emoji: "😆", rotation: 135 },
+    { id: 1, emoji: "😘", rotation: 180 },
   ],
 ];
 
@@ -49,6 +68,16 @@ export default function App() {
   const [gameDeck, setGameDeck] = useState(gameDecks);
   const [timeRemaining, setTimeRemaining] = useState(10);
   const [gameOver, setGameOver] = useState(false);
+  const [notInDeck, setNotInDeck] = useState(false);
+
+  useEffect(() => {
+    if (notInDeck) {
+      const timeout = setTimeout(() => {
+        setNotInDeck(false);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [notInDeck]);
 
   const handleClick = (clickedEmoji) => {
     if (gameDeck[currentIndex].some((emoji) => emoji.id === clickedEmoji.id)) {
@@ -66,6 +95,8 @@ export default function App() {
       } else {
         setCurrentIndex(currentIndex + 1);
       }
+    } else {
+      setNotInDeck(true);
     }
   };
 
@@ -76,51 +107,67 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    if (timeRemaining > 0) {
-      const intervalId = setInterval(() => {
-        setTimeRemaining((time) => time - 1);
-      }, 1000);
-      return () => clearInterval(intervalId);
-    } else if (timeRemaining === 0) {
-      setGameOver(true);
-    }
-  }, [timeRemaining]);
-
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ fontSize: 50 }}> Time remaining: {timeRemaining}</Text>
-      </View>
+      <CountdownCircleTimer
+        isPlaying
+        duration={15}
+        colors={["#003300", "#FFFF00", "#FF3333"]}
+        colorsTime={[15, 7, 0]}
+        strokeWidth={15}
+        trailStrokeWidth={7}
+        size={150}
+        onComplete={() => {
+          setGameOver(true);
+        }}
+      >
+        {({ remainingTime }) => (
+          <Text style={{ fontSize: 40 }}>{remainingTime}</Text>
+        )}
+      </CountdownCircleTimer>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <View style={{ flexDirection: "row" }}>
-          {gameDeck[currentIndex].map((emoji, index) => (
-            <Text style={{ fontSize: 50 }} key={index}>
-              {emoji.emoji}
-            </Text>
-          ))}
-        </View>
+        {!gameOver && (
+          <>
+            <View style={{ flexDirection: "row" }}>
+              {gameDeck[currentIndex].map((emoji, index) => (
+                <Text
+                  style={{
+                    fontSize: 50,
+                    transform: [{ rotate: `${emoji.rotation}deg` }],
+                  }}
+                  key={index}
+                >
+                  {emoji.emoji}
+                </Text>
+              ))}
+            </View>
 
-        <View style={{ flexDirection: "row", marginTop: 20 }}>
-          {userDeck.map((emoji, index) => (
-            <TouchableOpacity
-              disabled={timeRemaining === 0 ? true : false}
-              key={index}
-              onPress={() => handleClick(emoji)}
-            >
-              <Text
-                style={{ fontSize: 50, opacity: timeRemaining === 0 ? 0.5 : 1 }}
-              >
-                {emoji.emoji}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+            <View style={{ flexDirection: "row", marginTop: 20 }}>
+              {userDeck.map((emoji, index) => (
+                <TouchableOpacity
+                  disabled={gameOver === true || notInDeck ? true : false}
+                  key={index}
+                  onPress={() => handleClick(emoji)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 50,
+                      backgroundColor: notInDeck ? "red" : "white",
+                      opacity: gameOver === true ? 0.5 : 1,
+                    }}
+                  >
+                    {emoji.emoji}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        )}
+      </View>
 
-        {/* Render the score */}
-        <View style={{ marginTop: 20 }}>
-          <Text style={{ fontSize: 50 }}>Score: {score}</Text>
-        </View>
+      {gameOver && <Text style={{ fontSize: 50 }}>Game Over</Text>}
+      <View style={{ marginTop: 20 }}>
+        <Text style={{ fontSize: 50 }}>{score}</Text>
       </View>
     </View>
   );
