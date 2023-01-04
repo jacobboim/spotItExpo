@@ -1,0 +1,30 @@
+{
+  "cli": {
+    "version": ">= 2.3.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "ios": {
+        "simulator": true
+      },
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "jacob.boim30@gmail.com",
+        "ascAppId": "1662061676",
+        "appleTeamId": "F3K69YG4FU"
+      }
+    }
+  }
+}
