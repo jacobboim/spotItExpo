@@ -17,6 +17,10 @@ import { Fontisto, Feather } from "@expo/vector-icons";
 export const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
 
+  useEffect(() => {
+    console.log("user: ", user);
+  }, [user]);
+
   const handleLogout = () => {
     signOut(auth).catch((error) => console.log("Error logging out: ", error));
   };
@@ -28,7 +32,10 @@ export const HomeScreen = ({ navigation }) => {
         <Text style={{ fontSize: 50, color: "black" }}>1 MIN</Text>
       </Pressable>
 
-      {/* <Button title="Sign Out" onPress={handleLogout} /> */}
+      <Pressable onPress={() => navigation.navigate("FiveSecondGame")}>
+        {/* <Fontisto name="stopwatch" size={70} color="black" /> */}
+        <Text style={{ fontSize: 50, color: "black" }}>FiveSecondGame</Text>
+      </Pressable>
 
       <Pressable onPress={handleLogout}>
         <Feather name="log-out" size={50} color="black" />

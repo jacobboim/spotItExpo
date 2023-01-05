@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { HomeScreen } from "../screens";
 import OneMinuteGame from "../screens/OneMinuteGame";
+import FiveSecondGame from "../screens/FiveSecondGame";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,11 @@ export const AppStack = () => {
       <Stack.Screen
         name="OneMinuteGame"
         component={OneMinuteGame}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FiveSecondGame"
+        component={FiveSecondGame}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

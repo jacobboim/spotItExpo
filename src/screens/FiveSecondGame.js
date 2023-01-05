@@ -88,7 +88,7 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 console.log(screenHeight, "screenheight");
-export default function OneMinuteGame({ navigation }) {
+export default function FiveSecondGame({ navigation }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [userDeck, setUserDeck] = useState(defaultUserDeck);
@@ -97,10 +97,11 @@ export default function OneMinuteGame({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const [gameDeck, setGameDeck] = useState(gameDecks);
-  const [timeRemaining, setTimeRemaining] = useState(25);
+  const [timeRemaining, setTimeRemaining] = useState(5);
   const [gameOver, setGameOver] = useState(false);
   const [notInDeck, setNotInDeck] = useState(false);
   const [roundOver, setRoundOver] = useState(true);
+  const [roundWon, setRoundWon] = useState(false);
   const [roundOverForUser, setRoundOverForUser] = useState(true);
   const [playAgain, setPlayAgain] = useState(false);
   const [goHome, setGoHome] = useState(false);
@@ -113,8 +114,8 @@ export default function OneMinuteGame({ navigation }) {
     onSnapshot(userQuery, (docsSnap) => {
       docsSnap.forEach((doc) => {
         if (doc.id === user?.email) {
-          setHighScore(doc.data().highScore);
-          console.log(highScore, "highScore");
+          setHighScore(doc.data().FiveSecondGameScore);
+          //   console.log(highScore, "highScore");
         }
       });
     });
@@ -130,16 +131,12 @@ export default function OneMinuteGame({ navigation }) {
     }
   }, [notInDeck]);
 
-  // useEffect(() => {
-  //   getHighScore();
-  // }, []);
-
   //make a reset function
   const resetGame = () => {
     setScore(0);
     setCurrentIndex(0);
     setGameOver(false);
-    setTimeRemaining(25);
+    setTimeRemaining(5);
   };
 
   function handleButtonPress() {
@@ -148,20 +145,40 @@ export default function OneMinuteGame({ navigation }) {
     setScore(score + 1);
     if (score + 1 > highScore) {
       updateDoc(docRef, {
-        highScore: score + 1,
+        FiveSecondGameScore: score + 1,
       });
     }
   }
 
+  function addTime() {
+    if (score <= 5) {
+      setTimeRemaining(timeRemaining - timeRemaining + 5);
+    } else if (score <= 10) {
+      setTimeRemaining(timeRemaining - timeRemaining + 4);
+    } else {
+      setTimeRemaining(timeRemaining - timeRemaining + 3);
+    }
+  }
+  const resetTimer = () => {
+    if (score <= 5) {
+      setTimeRemaining(5);
+    } else if (score <= 10) {
+      setTimeRemaining(4);
+    } else {
+      setTimeRemaining(3);
+    }
+  };
+
   const handleClick = (clickedEmoji) => {
     if (gameDeck[currentIndex].some((emoji) => emoji.id === clickedEmoji)) {
       setUserDeck([...gameDeck[currentIndex]]);
-      // setScore(score + 1);
       handleButtonPress();
       console.log(userDeck, "userDeck");
 
       setRoundOver(false);
       setRoundOverForUser(false);
+      setRoundWon(true);
+      addTime();
 
       setTimeout(() => setRoundOver(true), 500);
       setTimeout(() => setRoundOverForUser(true), 500);
@@ -205,6 +222,7 @@ export default function OneMinuteGame({ navigation }) {
     }
   };
 
+  console.log(timeRemaining, "timeRemaining");
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
@@ -217,7 +235,40 @@ export default function OneMinuteGame({ navigation }) {
         </View>
         {!gameOver && (
           <View style={styles.timerContainer}>
-            <CountdownCircleTimer
+            {roundOver && (
+              <CountdownCircleTimer
+                isPlaying={!gameOver}
+                duration={timeRemaining}
+                colors={["#003300", "#FFFF00", "#FF3333"]}
+                colorsTime={[15, 7, 0]}
+                strokeWidth={15}
+                trailStrokeWidth={7}
+                size={150}
+                onComplete={() => {
+                  //   resetTimer();
+
+                  if (!roundWon) {
+                    setRoundWon(false);
+                  } else {
+                    setGameOver(true);
+                  }
+                  return {
+                    shouldRepeat: roundWon ? true : false,
+                    delay: 1,
+                  };
+                }}
+              >
+                {({ remainingTime }) => (
+                  <Animated.Text
+                    entering={FadeIn.duration(1000).delay(700)}
+                    style={{ fontSize: 40, color: "white" }}
+                  >
+                    {remainingTime}
+                  </Animated.Text>
+                )}
+              </CountdownCircleTimer>
+            )}
+            {/* <CountdownCircleTimer
               isPlaying={!gameOver}
               duration={timeRemaining}
               colors={["#003300", "#FFFF00", "#FF3333"]}
@@ -226,7 +277,12 @@ export default function OneMinuteGame({ navigation }) {
               trailStrokeWidth={7}
               size={150}
               onComplete={() => {
-                setGameOver(true);
+                if (roundWon) {
+                  setRoundWon(false);
+                } else {
+                  setGameOver(true);
+                }
+                return { shouldRepeat: roundWon ? true : false, delay: 1 };
               }}
             >
               {({ remainingTime }) => (
@@ -237,7 +293,7 @@ export default function OneMinuteGame({ navigation }) {
                   {remainingTime}
                 </Animated.Text>
               )}
-            </CountdownCircleTimer>
+            </CountdownCircleTimer> */}
           </View>
         )}
 

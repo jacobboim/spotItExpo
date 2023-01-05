@@ -21,6 +21,7 @@ export const SignupScreen = ({ navigation }) => {
     setDoc(docRef, {
       username: newUser,
       highScore: 0,
+      FiveSecondGameScore: 0,
     });
   }
 
