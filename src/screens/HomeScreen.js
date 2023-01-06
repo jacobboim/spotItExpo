@@ -8,6 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import { signOut } from "firebase/auth";
+import { LinearGradient } from "expo-linear-gradient";
+import { ThemedButton } from "react-native-really-awesome-button";
+import AwesomeButton from "react-native-really-awesome-button";
 
 import { useAuth } from "../hooks/useAuth";
 import { auth } from "../config";
@@ -16,6 +19,9 @@ import { Fontisto, Feather } from "@expo/vector-icons";
 
 export const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
+  const [minTouched, setMinTouched] = useState(false);
+
+  const [speedTouched, setSpeedTouched] = useState(false);
 
   useEffect(() => {
     console.log("user: ", user);
@@ -26,21 +32,92 @@ export const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => navigation.navigate("OneMinuteGame")}>
-        <Fontisto name="stopwatch" size={70} color="black" />
-        <Text style={{ fontSize: 50, color: "black" }}>1 MIN</Text>
-      </Pressable>
+    <LinearGradient
+      colors={["#607D8B", "#546E7A", "#455A64", "#37474F", "#263238"]}
+      style={styles.linearGradient}
+    >
+      <View style={styles.container}>
+        <Text style={styles.gameName}>Kesharim</Text>
+        <View style={styles.gameOptionsContatier}>
+          {/* <ThemedButton name="rick" type="primary">
+            Rick's Primary Button
+          </ThemedButton> */}
 
-      <Pressable onPress={() => navigation.navigate("FiveSecondGame")}>
-        {/* <Fontisto name="stopwatch" size={70} color="black" /> */}
-        <Text style={{ fontSize: 50, color: "black" }}>FiveSecondGame</Text>
-      </Pressable>
+          {/* <Pressable
+            style={styles.pressableContaier}
+            onPress={() => navigation.navigate("OneMinuteGame")}
+          >
+            <Fontisto name="stopwatch" size={70} color="white" />
+            <Text style={{ fontSize: 35, color: "white" }}>1 MIN</Text>
+          </Pressable> */}
 
-      <Pressable onPress={handleLogout}>
-        <Feather name="log-out" size={50} color="black" />
-      </Pressable>
-    </View>
+          <ThemedButton
+            name="bruce"
+            type="primary"
+            onPressOut={() => navigation.navigate("OneMinuteGame")}
+            width={150}
+            height={150}
+            borderRadius={150}
+            backgroundColor="#818384"
+            // before={<Fontisto name="stopwatch" size={70} color="white" />}
+          >
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Fontisto name="stopwatch" size={70} color="white" />
+              <Text style={{ fontSize: 35, color: "white" }}>1 MIN</Text>
+            </View>
+          </ThemedButton>
+
+          <ThemedButton
+            name="bruce"
+            type="primary"
+            onPressOut={() => navigation.navigate("FiveSecondGame")}
+            width={150}
+            height={150}
+            borderRadius={150}
+            backgroundColor="#818384"
+            // before={<Fontisto name="stopwatch" size={70} color="white" />}
+          >
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Fontisto name="stopwatch" size={70} color="white" />
+              <Text style={{ fontSize: 35, color: "white" }}>Speed</Text>
+            </View>
+          </ThemedButton>
+
+          {/* <Pressable
+            onTouchStart={() => setSpeedTouched(!speedTouched)}
+            onTouchEnd={() => setSpeedTouched(false)}
+            style={[
+              styles.pressableContaier,
+              {
+                backgroundColor: speedTouched ? "darkgray" : "#818384",
+                borderRadius: 150,
+                padding: 15,
+              },
+            ]}
+            onPress={() => navigation.navigate("FiveSecondGame")}
+          >
+            <Fontisto name="stopwatch" size={70} color="white" />
+            <Text style={{ fontSize: 35, color: "white" }}>Speed</Text>
+          </Pressable> */}
+        </View>
+
+        <Pressable style={styles.signOut} onPress={handleLogout}>
+          <Feather name="log-out" size={50} color="white" />
+        </Pressable>
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -50,5 +127,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
+  },
+  gameName: {
+    fontSize: 50,
+    fontWeight: "bold",
+    marginBottom: 50,
+    color: "white",
+  },
+  gameOptionsContatier: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+  },
+  pressableContaier: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signOut: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  },
+  linearGradient: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: "100%",
+    // flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 });

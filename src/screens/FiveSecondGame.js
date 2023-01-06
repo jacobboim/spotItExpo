@@ -14,6 +14,7 @@ import {
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
+import { ThemedButton } from "react-native-really-awesome-button";
 
 import {
   collection,
@@ -234,39 +235,45 @@ export default function FiveSecondGame({ navigation }) {
           <Text style={styles.highScoreText}>{highScore}</Text>
         </View>
         {!gameOver && (
-          <View style={styles.timerContainer}>
+          <Animated.View style={styles.timerContainer}>
             {roundOver && (
-              <CountdownCircleTimer
-                isPlaying={!gameOver}
-                duration={timeRemaining}
-                colors={["#003300", "#FFFF00", "#FF3333"]}
-                colorsTime={[15, 7, 0]}
-                strokeWidth={15}
-                trailStrokeWidth={7}
-                size={150}
-                onComplete={() => {
-                  //   resetTimer();
-
-                  if (!roundWon) {
-                    setRoundWon(false);
-                  } else {
-                    setGameOver(true);
-                  }
-                  return {
-                    shouldRepeat: roundWon ? true : false,
-                    delay: 1,
-                  };
-                }}
+              <Animated.View
+                entering={FadeIn.duration(800).delay(300)}
+                exiting={SlideOutRight.duration(1000)}
               >
-                {({ remainingTime }) => (
-                  <Animated.Text
-                    entering={FadeIn.duration(1000).delay(700)}
-                    style={{ fontSize: 40, color: "white" }}
-                  >
-                    {remainingTime}
-                  </Animated.Text>
-                )}
-              </CountdownCircleTimer>
+                <CountdownCircleTimer
+                  isPlaying={!gameOver}
+                  duration={timeRemaining}
+                  colors={["#003300", "#FFFF00", "#FF3333"]}
+                  colorsTime={[15, 7, 0]}
+                  strokeWidth={15}
+                  trailStrokeWidth={7}
+                  size={150}
+                  onComplete={() => {
+                    //   resetTimer();
+
+                    if (!roundWon) {
+                      setRoundWon(false);
+                      setGameOver(true);
+                    } else {
+                      setGameOver(true);
+                    }
+                    return {
+                      shouldRepeat: roundWon ? true : false,
+                      delay: 1,
+                    };
+                  }}
+                >
+                  {({ remainingTime }) => (
+                    <Animated.Text
+                      entering={FadeIn.duration(400).delay(700)}
+                      style={{ fontSize: 40, color: "white" }}
+                    >
+                      {remainingTime}
+                    </Animated.Text>
+                  )}
+                </CountdownCircleTimer>
+              </Animated.View>
             )}
             {/* <CountdownCircleTimer
               isPlaying={!gameOver}
@@ -294,7 +301,7 @@ export default function FiveSecondGame({ navigation }) {
                 </Animated.Text>
               )}
             </CountdownCircleTimer> */}
-          </View>
+          </Animated.View>
         )}
 
         <View
@@ -308,7 +315,7 @@ export default function FiveSecondGame({ navigation }) {
               {roundOver && (
                 <Animated.View
                   entering={FadeIn.duration(1000).delay(700)}
-                  exiting={SlideOutRight.duration(1000).springify().mass(0.5)}
+                  //   exiting={SlideOutRight.duration(1000)}
                   style={[styles.gameDeckContainer]}
                 >
                   {gameDeck[currentIndex].map((emoji, index) => (
@@ -392,36 +399,50 @@ export default function FiveSecondGame({ navigation }) {
         {gameOver && (
           <View style={styles.gameOverContainer}>
             <View style={styles.gameOverContainerOptions}>
-              <Pressable
-                onPress={() => navigation.navigate("Home")}
-                onTouchStart={() => setGoHome(!goHome)}
-                onTouchEnd={() => setGoHome(false)}
-                style={{
-                  backgroundColor: goHome ? "darkgray" : "#818384",
-                  padding: 15,
-                  borderRadius: 50,
-                }}
+              <ThemedButton
+                name="bruce"
+                type="primary"
+                onPressOut={() => navigation.navigate("Home")}
+                width={100}
+                height={110}
+                borderRadius={360}
+                backgroundColor="#818384"
               >
-                <Entypo name="home" size={70} color="white" />
-              </Pressable>
-              <Pressable
-                onPress={resetGame}
-                onTouchStart={() => setPlayAgain(!playAgain)}
-                onTouchEnd={() => setPlayAgain(false)}
-                style={{
-                  backgroundColor: playAgain ? "darkgray" : "#818384",
-                  padding: 15,
-                  borderRadius: 50,
-                }}
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo name="home" size={70} color="white" />
+                </View>
+              </ThemedButton>
+
+              <ThemedButton
+                name="bruce"
+                type="primary"
+                onPressOut={resetGame}
+                width={99}
+                height={110}
+                borderRadius={360}
+                backgroundColor="#818384"
               >
-                {/* <AntDesign name="playcircleo" size={75} color="white" /> */}
-                <Ionicons
-                  name="play"
-                  size={65}
-                  color="white"
-                  style={{ paddingLeft: 5 }}
-                />
-              </Pressable>
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name="play"
+                    size={65}
+                    color="white"
+                    style={{ paddingLeft: 5 }}
+                  />
+                </View>
+              </ThemedButton>
             </View>
 
             <Text style={{ fontSize: 50, marginTop: 180, color: "white" }}>

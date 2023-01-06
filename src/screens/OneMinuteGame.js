@@ -14,6 +14,7 @@ import {
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
+import { ThemedButton } from "react-native-really-awesome-button";
 
 import {
   collection,
@@ -251,7 +252,7 @@ export default function OneMinuteGame({ navigation }) {
             <>
               {roundOver && (
                 <Animated.View
-                  entering={FadeIn.duration(1000).delay(700)}
+                  entering={FadeIn.duration(1000).delay(300)}
                   exiting={SlideOutRight.duration(1000).springify().mass(0.5)}
                   style={[styles.gameDeckContainer]}
                 >
@@ -273,7 +274,7 @@ export default function OneMinuteGame({ navigation }) {
               <View style={[styles.userDeckContainerList]}>
                 {roundOverForUser && (
                   <Animated.FlatList
-                    entering={FadeIn.duration(1000)}
+                    entering={FadeIn.duration(700)}
                     data={userDeck}
                     numColumns={3}
                     scrollEnabled={false}
@@ -289,7 +290,7 @@ export default function OneMinuteGame({ navigation }) {
                         }}
                       >
                         <Animated.Text
-                          entering={BounceIn.delay(index * 200)}
+                          entering={BounceIn.delay(index * 130)}
                           style={{
                             fontSize: 50,
                             backgroundColor: notInDeck ? "red" : "transparent",
@@ -336,19 +337,52 @@ export default function OneMinuteGame({ navigation }) {
         {gameOver && (
           <View style={styles.gameOverContainer}>
             <View style={styles.gameOverContainerOptions}>
-              <Pressable
-                onPress={() => navigation.navigate("Home")}
-                onTouchStart={() => setGoHome(!goHome)}
-                onTouchEnd={() => setGoHome(false)}
-                style={{
-                  backgroundColor: goHome ? "darkgray" : "#818384",
-                  padding: 15,
-                  borderRadius: 50,
-                }}
+              <ThemedButton
+                name="bruce"
+                type="primary"
+                onPressOut={() => navigation.navigate("Home")}
+                width={100}
+                height={110}
+                borderRadius={360}
+                backgroundColor="#818384"
               >
-                <Entypo name="home" size={70} color="white" />
-              </Pressable>
-              <Pressable
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo name="home" size={70} color="white" />
+                </View>
+              </ThemedButton>
+
+              <ThemedButton
+                name="bruce"
+                type="primary"
+                onPressOut={resetGame}
+                width={99}
+                height={110}
+                borderRadius={360}
+                backgroundColor="#818384"
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name="play"
+                    size={65}
+                    color="white"
+                    style={{ paddingLeft: 5 }}
+                  />
+                </View>
+              </ThemedButton>
+
+              {/* <Pressable
                 onPress={resetGame}
                 onTouchStart={() => setPlayAgain(!playAgain)}
                 onTouchEnd={() => setPlayAgain(false)}
@@ -358,14 +392,13 @@ export default function OneMinuteGame({ navigation }) {
                   borderRadius: 50,
                 }}
               >
-                {/* <AntDesign name="playcircleo" size={75} color="white" /> */}
                 <Ionicons
                   name="play"
                   size={65}
                   color="white"
                   style={{ paddingLeft: 5 }}
                 />
-              </Pressable>
+              </Pressable> */}
             </View>
 
             <Text style={{ fontSize: 50, marginTop: 180, color: "white" }}>
