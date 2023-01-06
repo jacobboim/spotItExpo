@@ -39,18 +39,6 @@ export const HomeScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.gameName}>Kesharim</Text>
         <View style={styles.gameOptionsContatier}>
-          {/* <ThemedButton name="rick" type="primary">
-            Rick's Primary Button
-          </ThemedButton> */}
-
-          {/* <Pressable
-            style={styles.pressableContaier}
-            onPress={() => navigation.navigate("OneMinuteGame")}
-          >
-            <Fontisto name="stopwatch" size={70} color="white" />
-            <Text style={{ fontSize: 35, color: "white" }}>1 MIN</Text>
-          </Pressable> */}
-
           <ThemedButton
             name="bruce"
             type="primary"
@@ -94,28 +82,32 @@ export const HomeScreen = ({ navigation }) => {
               <Text style={{ fontSize: 35, color: "white" }}>Speed</Text>
             </View>
           </ThemedButton>
-
-          {/* <Pressable
-            onTouchStart={() => setSpeedTouched(!speedTouched)}
-            onTouchEnd={() => setSpeedTouched(false)}
-            style={[
-              styles.pressableContaier,
-              {
-                backgroundColor: speedTouched ? "darkgray" : "#818384",
-                borderRadius: 150,
-                padding: 15,
-              },
-            ]}
-            onPress={() => navigation.navigate("FiveSecondGame")}
-          >
-            <Fontisto name="stopwatch" size={70} color="white" />
-            <Text style={{ fontSize: 35, color: "white" }}>Speed</Text>
-          </Pressable> */}
         </View>
 
-        <Pressable style={styles.signOut} onPress={handleLogout}>
+        <ThemedButton
+          name="bruce"
+          type="primary"
+          style={styles.signOut}
+          onPressOut={handleLogout}
+          width={95}
+          height={100}
+          borderRadius={360}
+          backgroundColor="#818384"
+          // before={<Fontisto name="stopwatch" size={70} color="white" />}
+        >
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Feather name="log-out" size={50} color="white" />
+          </View>
+        </ThemedButton>
+        {/* <Pressable style={styles.signOut} onPress={handleLogout}>
           <Feather name="log-out" size={50} color="white" />
-        </Pressable>
+        </Pressable> */}
       </View>
     </LinearGradient>
   );
@@ -147,8 +139,8 @@ const styles = StyleSheet.create({
   },
   signOut: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: -250,
+    left: 84,
   },
   linearGradient: {
     position: "absolute",
